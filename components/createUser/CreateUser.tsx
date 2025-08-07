@@ -4,7 +4,6 @@ import { Label } from "@radix-ui/react-label";
 import { Button } from "../ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -13,21 +12,20 @@ import {
 } from "../ui/card";
 import { Input } from "../ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { register } from "module";
 
 export function CreateUser() {
   interface createUserForm {
-    user: string;
+    name: string;
     email: string;
     password: string;
   }
 
-  const { handleSubmit, register } = useForm<createUserForm>();
+  const { handleSubmit, register, reset } = useForm<createUserForm>();
 
   const onSubmit: SubmitHandler<createUserForm> = async (data) => {
-    if(!data.email || !data.password || !data.user) return
+    if(!data.email || !data.password || !data.name) return
     try {
-      const response = await fetch("http://localhost:4000/api/users/create", {
+      const response = await fetch("http://localhost:4000/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,8 +35,7 @@ export function CreateUser() {
     } catch (err) {
       console.error(err);
     }
-
-    console.log(data);
+reset()
   };
 
   return (
@@ -71,7 +68,7 @@ export function CreateUser() {
               <div className="flex items-center">
                 <Label htmlFor="name">Name</Label>
               </div>
-              <Input {...register("user", {required:true})} id="name" type="text" required />
+              <Input {...register("name", {required:true})} id="name" type="text" required />
             </div>
           </div>
         <Button variant="outline" type="submit" className="w-full">
